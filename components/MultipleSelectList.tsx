@@ -11,12 +11,14 @@ import {
     ViewStyle,
     Pressable
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 import { MultipleSelectListProps } from '..';
 
 type L1Keys = { key?: any; value?: any; disabled?: boolean | undefined }
 
 const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
+    keys,
     fontFamily,
     setSelected,
     placeholder,
@@ -33,7 +35,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
     search = true,
     defaultOption,
     searchPlaceholder = "search",
-    onSelect = () => { },
+    onSelect = (val: string) => { },
     label,
     notFoundText = "No data found",
     disabledItemStyles,
@@ -48,14 +50,14 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
 }) => {
 
     const oldOption = React.useRef(null)
-    const [_firstRender, _setFirstRender] = React.useState<boolean>(true);
+    let [_firstRender, _setFirstRender] = React.useState<boolean>(true);
     const [dropdown, setDropdown] = React.useState<boolean>(dropdownShown);
     const selectedval = React.useRef<any>();
     const [selectedkey, setSelectedKey] = React.useState<any>([]);
     const [height, setHeight] = React.useState<number>(350)
     const animatedvalue = React.useRef(new Animated.Value(0)).current;
     const [filtereddata, setFilteredData] = React.useState(data);
-
+    // const isFocused = useIsFocused();
 
     const slidedown = () => {
         setDropdown(true)
@@ -103,6 +105,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
             setSelected(value);
             onSelected(value);
         }
+
     };
 
     const onSelected = (value: any) => {
@@ -114,8 +117,28 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
     };
 
     React.useEffect(() => {
+        selectedval.current = [];
+        defaultOption && defaultOption.length > 0 && defaultOption.map((val) => {
+
+            oldOption.current = val.key;
+            if (oldOption.current != null) {
+
+            }
+            let optionsValues = [] as string[];
+            selectedval && selectedval.current && selectedval.current.map((data: string) => {
+                optionsValues.push(data)
+            })
+
+            if (!optionsValues.includes(val.value)) {
+                optionsValues.push(val.value);
+                selectedval.current = (optionsValues);
+            }
+        })
+
+    }, [defaultOption])
+
+    React.useEffect(() => {
         if (_firstRender) {
-            console.log("defaultOption", defaultOption)
             defaultOption && defaultOption.length > 0 && defaultOption.map((val) => {
 
                 oldOption.current = val.key;
@@ -134,12 +157,22 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
 
             })
         }
-
-    }, [])
+    }, []);
 
     React.useEffect(() => {
-        onSelect()
+        // if (_firstRender) {
+        //     _setFirstRender(false);
+        //     onSelect()
+        //     return;
+        // }
+
+        // console.log("defaultOption after1", defaultOption, selectedval.current);
+        // handleSelect(selectedval.current);
     }, [selectedval.current])
+
+    // React.useEffect(() => {
+    //     if (!isFocused) slideup()
+    // }, [])
 
 
 
@@ -200,10 +233,10 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                     (selectedval.current?.length > 0)
 
                         ?
-                        <TouchableOpacity style={[styles.wrapper, boxStyles]} onPress={() => { if (!dropdown) { slidedown() } else { slideup() } }} >
+                        <TouchableOpacity style={[styles.wrapper, boxStyles]} onPress={() => { if (!dropdown) { slidedown() } else { slideup() } }}  >
                             {/* <View>
                                 <Text style={[{ fontWeight: '600', fontFamily }, labelStyles]}>{label}</Text>
-                                <View style={{ flexDirection: 'row', marginBottom: 8, flexWrap: 'wrap' }}>
+                                <View style={{ flexDirection: 'row', marginBottom: 8, flex  Wrap: 'wrap' }}>
                                     {
                                         selectedval?.map((item, index) => {
                                             return (
@@ -268,14 +301,12 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                                             {
                                                                 (selectedval.current?.includes(value))
                                                                     ?
-
                                                                     <Image
                                                                         key={index}
                                                                         source={require('../assets/images/check.png')}
                                                                         resizeMode='contain'
                                                                         style={[{ width: 8, height: 8, paddingLeft: 7 }]}
                                                                     />
-
                                                                     :
                                                                     null
 
@@ -288,19 +319,10 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                                 return (
                                                     <TouchableOpacity style={[styles.option, dropdownItemStyles]} key={index} onPress={() => {
 
-
                                                         let existing = selectedval.current?.indexOf(value)
-
-
                                                         // console.log(existing);
 
                                                         if (existing != -1 && existing != undefined) {
-
-                                                            let sv = [...selectedval.current];
-                                                            sv.splice(existing, 1)
-                                                            selectedval.current = sv;
-                                                            // setSelectedVal(sv);
-
 
                                                             setSelected((val: any) => {
                                                                 let temp = [...val];
@@ -308,7 +330,11 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                                                 return temp;
                                                             });
 
-                                                            // onSelect()
+
+                                                            let sv = [...selectedval.current];
+                                                            sv.splice(existing, 1)
+                                                            selectedval.current = sv;
+                                                            // setSelectedVal(sv);
                                                         } else {
 
                                                             if (save === 'value') {
@@ -329,38 +355,29 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                                                 optionsValues.push(data)
                                                             })
 
+
                                                             if (!optionsValues.includes(value)) {
                                                                 optionsValues.push(value);
                                                                 selectedval.current = (optionsValues);
                                                             }
-
-                                                            onSelect()
                                                         }
-
-
-
+                                                        onSelect(selectedval.current);
                                                     }}>
                                                         <View style={[{ width: 15, height: 15, borderWidth: 1, marginRight: 10, borderColor: 'gray', borderRadius: 3, justifyContent: 'center', alignItems: 'center' }, checkBoxStyles]}>
 
                                                             {
                                                                 (selectedval.current?.includes(value))
                                                                     ?
-
                                                                     <Image
                                                                         key={index}
                                                                         source={require('../assets/images/check.png')}
                                                                         resizeMode='contain'
                                                                         style={{ width: 8, height: 8, paddingLeft: 7 }}
                                                                     />
-
                                                                     :
                                                                     null
 
                                                             }
-
-
-
-
                                                         </View>
                                                         <Text style={[{ fontFamily }, dropdownTextStyles]}>{value}</Text>
                                                     </TouchableOpacity>
