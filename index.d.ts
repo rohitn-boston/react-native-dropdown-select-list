@@ -124,6 +124,8 @@ export interface MultipleSelectListProps  {
     /**
     * Placeholder text that will be displayed in the select box
     */
+
+    keys?:string,
     placeholder?: string,
 
     /**
@@ -189,7 +191,7 @@ export interface MultipleSelectListProps  {
     /**
     * Trigger an action when option is selected
     */
-    onSelect?: () => void,
+    onSelect?: (setSelected) => void,
 
     /**
     * set text of label which appears soon after multiple values are selected
