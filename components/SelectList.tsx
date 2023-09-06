@@ -146,15 +146,15 @@ const SelectList: React.FC<SelectListProps> = ({
                                     });
                                     setFilteredData(result)
                                 }}
-                                style={[{ paddingTop: 5, height: 29, flex: 1, fontFamily }, inputStyles]}
+                                style={[{ paddingTop: 5,paddingLeft:4, height: 29, flex: 1, fontFamily,color:'black' }]}
                             />
-                            <TouchableOpacity onPress={() => slideup()} >
+                           <TouchableOpacity onPress={() => { slideup();  setFilteredData(data); }}>
 
                                 {
                                     (!closeicon)
                                         ?
                                         <Image
-                                            source={require('../assets/images/close.png')}
+                                            source={require('../assets/images/chevron.png')}
                                             resizeMode='contain'
                                             style={{ width: 17, height: 17 }}
                                         />
@@ -177,7 +177,7 @@ const SelectList: React.FC<SelectListProps> = ({
                                 <Image
                                     source={require('../assets/images/chevron.png')}
                                     resizeMode='contain'
-                                    style={{ width: 20, height: 20 }}
+                                    style={{ width: 20, height: 25 }}
                                 />
                                 :
                                 arrowicon

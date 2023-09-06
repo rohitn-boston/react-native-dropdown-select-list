@@ -207,7 +207,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                 }}
                                 style={[{ padding: 0, height: 20, flex: 1, fontFamily }, inputStyles]}
                             />
-                            <TouchableOpacity onPress={() => {
+                            {/* <TouchableOpacity onPress={() => {
                                 slideup()
                                 // setTimeout(() => setFilteredData(data), 800)
                             }} >
@@ -222,7 +222,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                         :
                                         closeicon
                                 }
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
 
                         </View>
@@ -270,7 +270,7 @@ const MultipleSelectList: React.FC<MultipleSelectListProps> = ({
                                     <Image
                                         source={require('../assets/images/chevron.png')}
                                         resizeMode='contain'
-                                        style={{ width: 20, height: 20 }}
+                                        style={{ width: 20, height: 25 }}
                                     />
                                     :
                                     arrowicon
