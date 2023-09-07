@@ -177,7 +177,7 @@ const SelectList: React.FC<SelectListProps> = ({
                                 <Image
                                     source={require('../assets/images/chevron.png')}
                                     resizeMode='contain'
-                                    style={{ width: 20, height: 25 }}
+                                    style={{ width: 23, height: 24 }}
                                 />
                                 :
                                 arrowicon
